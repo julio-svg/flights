@@ -1,11 +1,13 @@
 package com.julio.flights.controller.dto;
 
-import lombok.Data;
+import lombok.*;
 
 
 import java.time.LocalDateTime;
 
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class Flight {
 
     private Long id;
@@ -13,4 +15,5 @@ public class Flight {
     private LocalDateTime departureTime;
     private String origin;
     private String destination;
+
 }

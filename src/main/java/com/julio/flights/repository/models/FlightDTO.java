@@ -1,19 +1,20 @@
 package com.julio.flights.repository.models;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Data
 @AllArgsConstructor
+@NoArgsConstructor
+@Setter
+@Getter
 public class FlightDTO {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
-    @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "departure_time")
     private LocalDateTime departureTime;
     private String origin;

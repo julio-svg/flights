@@ -8,7 +8,9 @@ import com.julio.flights.controller.dto.FlightController;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import
+
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 
 @SpringBootTest
 class FlightsApplicationTests {
@@ -24,18 +26,14 @@ class FlightsApplicationTests {
 	FlightController flightController;
 
 	@Test
-	void contextLoads() {
-	}
-
-	@Test
 	public void givenEmptyDatabaseFligth_whenFlightsAdd_thenFindFligthsByReferenceReturnFligth() {
 		//when
-		Flight flight = new Flight();
+
+		Flight flight = new Flight(1L,LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS),"Madrid","Canarias");
 		flightController.addFligthsByReference(flight);
 
 		//then
-		Flight flightAdded = flightController.findFligthsByReference(flight.getId);
-		assertEquals(flight,flightAdded);
+		assertEquals(flight,flightController.findFligthsByReference("1").getBody());
 	}
 
 

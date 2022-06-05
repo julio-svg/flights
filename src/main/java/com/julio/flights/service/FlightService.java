@@ -8,4 +8,5 @@ public interface FlightService {
 
     public void addFligthsByReference(Flight flight);
 
+    public Flight findFligthsByReference(String id);
 }

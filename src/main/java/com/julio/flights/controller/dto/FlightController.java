@@ -6,9 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("flights/v0/")
@@ -20,11 +18,25 @@ public class FlightController {
     @PostMapping("flights/")
     public ResponseEntity<Void> addFligthsByReference(Flight flight){
         flightService.addFligthsByReference(flight);
+
         MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
         headers.add("Location" , "/flights/" + flight.getId());
-        ResponseEntity<Void> responseEntity = new ResponseEntity(headers, HttpStatus.CREATED);
+        return new ResponseEntity(headers, HttpStatus.CREATED);
 
-        return responseEntity;
+    }
+
+    @GetMapping("flights/{id}")
+    public ResponseEntity<Flight> findFligthsByReference(@PathVariable("id") String id) {
+        Flight flight = flightService.findFligthsByReference(id);
+
+        HttpStatus httpStatus;
+        if (flight != null) {
+            httpStatus = HttpStatus.OK;
+        } else {
+            httpStatus = HttpStatus.NO_CONTENT;
+        }
+
+        return new ResponseEntity<>(flight, httpStatus);
 
     }
 
