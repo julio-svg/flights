@@ -3,7 +3,7 @@ package com.julio.flights;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+
 
 import com.julio.flights.controller.dto.Flight;
 import com.julio.flights.controller.dto.FlightController;
@@ -22,50 +22,51 @@ class FlightsApplicationTests {
 
 	/* addFligthsByReference
 	   findFligthsByReference
-	   findFigsthsByOrigin
-	   findFligthsByDate
-	   deleteFligthsByReference
-	 */
+	*/
 
 	@Autowired
 	FlightController flightController;
 
 	@Test
-	public void givenEmptyDatabaseFligth_whenFlightsAdd_thenFindFligthsByReferenceReturnFligth() {
+	public void givenEmptyDatabaseFligth_whenFlightsAdd_thenFindFligthsByReference_returnFligth() {
 		//when
-
-		Flight flight = new Flight(1L,LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS),"Madrid","Canarias");
+		Flight flight = new Flight(1L,LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS),"Madrid","Lanzarote");
 		flightController.addFligthsByReference(flight);
-
 		//then
 		assertEquals(flight,flightController.findFligthsByReference("1").getBody());
-
 
 	}
 
 	@Test
-	public void givenEmptyDatabaseFligth_whenWithOutFlightsAdd_thenFindFligthsByReferenceReturnNotFoundFligth() {
-
-		//then
+	public void givenEmptyDatabaseFligth_whenWithOutFlightsAdd_thenFindFligthsByReference_returnNotFoundFligth() {
+		//when
 		ResponseEntity<Flight> response = flightController.findFligthsByReference("2");
+		//then
 		assertNotNull(response.getBody());
 		assertEquals(HttpStatus.NOT_FOUND,response.getStatusCode());
 	}
 
 	@Test
-	public void givenOneFligth_whenTryToAddFlightWithSameId_thenDuplicateFligthFligthException() {
+	public void givenOneFlight_whenTryToAdd_thenAddFligth_returnOk(){
 		//when
-
-		Flight flight = new Flight(3L,LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS),"Madrid","Canarias");
-		flightController.addFligthsByReference(flight);
-		//when
-
-		Flight flight2 = new Flight(3L,LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS),"Madrid","Canarias");
-		flightController.addFligthsByReference(flight2);
+		Flight flight = new Flight(4L,LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS),"Madrid","Lanzarote");
+		ResponseEntity<Void> response = flightController.addFligthsByReference(flight);
+		//then
+		assertEquals(HttpStatus.CREATED, response.getStatusCode());
 
 	}
 
+	@Test
+	public void givenOneFligth_whenTryToAddFlightWithSameId_thenDuplicateFligthFligthException() {
+		//when
+		Flight flight = new Flight(3L,LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS),"Madrid","Lanzarote");
+		flightController.addFligthsByReference(flight);
+		Flight flight2 = new Flight(3L,LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS),"Madrid","Lanzarote");
+		ResponseEntity<Void> response = flightController.addFligthsByReference(flight2);
 
+		//then
+		assertEquals(HttpStatus.CONFLICT, response.getStatusCode());
 
+	}
 
 }
