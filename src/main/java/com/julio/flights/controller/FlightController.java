@@ -18,8 +18,6 @@ import java.util.function.Predicate;
 @RequestMapping("flights/v0/")
 public class FlightController {
 
-    Predicate<Long> isFlyDuplicated = flightId-> findFligthsByReference(flightId.toString()).getStatusCode() == HttpStatus.OK;
-
     Logger LOG = LoggerFactory.getLogger("FlightController");
 
     @Autowired
@@ -29,7 +27,9 @@ public class FlightController {
     public ResponseEntity<Void> addFligthsByReference(Flight flight){
         LOG.info("addFligthsByReference Controller");
 
-        if(isFlyDuplicated.test(flight.getId())){
+        Predicate<Long> isFlyIdDuplicated = flightId-> findFligthsByReference(flightId.toString()).getStatusCode() == HttpStatus.OK;
+        
+        if(isFlyIdDuplicated.test(flight.getId())){
             LOG.info("Duplicate flight{" + flight + "}");
             throw new DuplicateFlightException(flight.getId().toString());
         }
